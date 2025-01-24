@@ -83,8 +83,7 @@ public class LinkedList {
 	 */
 	public void add(int index, MemoryBlock block) {
 		if (index < 0 || index > size) {
-			throw new IllegalArgumentException(
-					"index must be between 0 and size");
+			throw new IllegalArgumentException("Invalid index");
 		}
 		
 		Node newNode = new Node(block);
@@ -95,20 +94,17 @@ public class LinkedList {
 			if (size == 0) {
 				last = newNode;
 			}
-		} 
-		else if (index == size) {
-			if (last != null) {
-				last.next = newNode;
+		} else {
+			Node current = first;
+			for (int i = 0; i < index - 1; i++) {
+				current = current.next;
 			}
-			last = newNode;
-			if (first == null) {
-				first = newNode;
+			newNode.next = current.next;
+			current.next = newNode;
+			
+			if (index == size) {
+				last = newNode;
 			}
-		} 
-		else {
-			Node prev = getNode(index - 1);
-			newNode.next = prev.next;
-			prev.next = newNode;
 		}
 		
 		size++;
@@ -163,14 +159,17 @@ public class LinkedList {
 	 */
 	public int indexOf(MemoryBlock block) {
 		Node current = first;
-		for (int i = 0; i < size; i++) {
+		int index = 0;
+		while (current != null) {
 			if (current.block == block) {
-				return i;
+				return index;
 			}
 			current = current.next;
+			index++;
 		}
 		return -1;
 	}
+	
 
 	/**
 	 * Removes the given node from this list.	
