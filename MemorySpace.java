@@ -139,6 +139,7 @@ public class MemorySpace {
 					current.baseAddress = next.baseAddress;
 					current.length = next.length;
 					
+					
 					next.baseAddress = tempBase;
 					next.length = tempLength;
 				}
