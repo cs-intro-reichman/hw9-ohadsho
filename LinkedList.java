@@ -55,11 +55,10 @@ public class LinkedList {
 					"index must be between 0 and size");
 		}
 		Node current = first;
-		for(int i=0; i< index; i++){
+		for(int i = 0; i < index; i++){
 			current = current.next;
 		}
-		//// Replace the following statement with your code
-		return null;
+		return current;
 	}
 	
 	/**
@@ -150,6 +149,7 @@ public class LinkedList {
 		return getNode(index).block;
 	}	
 
+	/**
 	/**
 	 * Gets the index of the node pointing to the given memory block.
 	 * 
