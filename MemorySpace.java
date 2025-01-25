@@ -130,7 +130,6 @@ public class MemorySpace {
 			for (int j = 0; j < freeList.getSize() - i - 1; j++) {
 				MemoryBlock current = freeList.getBlock(j);
 				MemoryBlock next = freeList.getBlock(j + 1);
-				
 				if (current.baseAddress > next.baseAddress) {
 					// Swap blocks
 					int tempBase = current.baseAddress;
