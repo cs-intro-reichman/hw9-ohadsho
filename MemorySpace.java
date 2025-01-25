@@ -58,7 +58,6 @@ public class MemorySpace {
 	 * @return the base address of the allocated block, or -1 if unable to allocate
 	 */
 	public int malloc(int length) {
-		// Iterate through the free list to find a suitable block
 		for (int i = 0; i < freeList.getSize(); i++) {
 			MemoryBlock freeBlock = freeList.getBlock(i);
 			
@@ -80,7 +79,6 @@ public class MemorySpace {
 		
 		return -1;
 	}
-
 	/**
 	 * Frees the memory block whose base address equals the given address.
 	 * This implementation deletes the block whose base address equals the given 
@@ -90,20 +88,22 @@ public class MemorySpace {
 	 *            the starting address of the block to freeList
 	 */
 	
-public void free(int address) {
-    for (int i = 0; i < allocatedList.getSize(); i++) {
-        MemoryBlock block = allocatedList.getBlock(i);
-        
-        // Check if this is the block to be freed
-        if (block.baseAddress == address) {
-            allocatedList.remove(i);
-            
-            freeList.addLast(block);
-            
-            return;
-        }
-    }
-}
+	 public void free(int address) {
+		for (int i = 0; i < allocatedList.getSize(); i++) {
+			MemoryBlock block = allocatedList.getBlock(i);
+			
+			if (block.baseAddress == address) {
+				// Remove the block from the allocated list
+				allocatedList.remove(i);
+				
+				freeList.addLast(block);
+				
+				return;
+			}
+		}
+		
+		throw new IllegalArgumentException("No allocated block found with the given address");
+	}
 	/**
 	 * A textual representation of the free list and the allocated list of this memory space, 
 	 * for debugging purposes.
@@ -117,7 +117,12 @@ public void free(int address) {
 	 * Normally, called by malloc, when it fails to find a memory block of the requested size.
 	 * In this implementation Malloc does not call defrag.
 	 */
-	public void defrag() {
+
+	 public void defrag() {
+		if (freeList.getSize() <= 1) {
+			return;
+		}
+		
 		for (int i = 0; i < freeList.getSize() - 1; i++) {
 			for (int j = 0; j < freeList.getSize() - i - 1; j++) {
 				MemoryBlock current = freeList.getBlock(j);
@@ -146,5 +151,6 @@ public void free(int address) {
 			} else {
 				i++;
 			}
-		}	}
+		}
+	}
 }
