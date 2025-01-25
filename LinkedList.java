@@ -178,23 +178,37 @@ public class LinkedList {
 	 *        the node that will be removed from this list
 	 */
 	public void remove(Node node) {
-		if (first == node) {
-			first = node.next;
-			if (first == null) {
-				last = null;
-			}
-		} else {
-			Node current = first;
-			while (current.next != node) {
-				current = current.next;
-			}
-			current.next = node.next;
-			if (node == last) {
-				last = current;
-			}
-		}
-		size--;
-	}
+        if (node == null)
+           throw new NullPointerException("node must not be null");
+		   
+        if (size == 0)
+            return;
+
+        int index = indexOf(node.block);
+
+        if (index == -1)
+            return;
+
+        if (index == 0) {
+            first = first.next;
+            if (size == 1)
+                last = null;
+        } 
+
+		else {
+            int counter = 0;
+            Node current = first;
+            while (counter < index - 1) {
+                current = current.next;
+                counter++;
+            }
+            current.next = node.next;
+            if (node == last) {
+                last = current;
+            }
+        }
+        size--;
+    }
 
 	/**
 	 * Removes from this list the node which is located at the given index.
@@ -209,23 +223,7 @@ public class LinkedList {
 			throw new IllegalArgumentException(
 					"index must be between 0 and size");
 		}
-		
-		if (index == 0) {
-			first = first.next;
-			if (first == null) {
-				last = null;
-			}
-		} else {
-			Node prev = getNode(index - 1);
-			Node toRemove = prev.next;
-			prev.next = toRemove.next;
-			
-			if (toRemove == last) {
-				last = prev;
-			}
-		}
-		
-		size--;
+		remove(getNode(index));
 	}
 
 	/**
