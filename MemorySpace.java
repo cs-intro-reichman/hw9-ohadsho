@@ -78,31 +78,6 @@ public class MemorySpace {
 				return allocatedBlock.baseAddress;
 			}
 		}
-		
-		// If no suitable block found, try defragmentation
-		defrag();
-		
-		// Retry allocation after defragmentation
-		for (int i = 0; i < freeList.getSize(); i++) {
-			MemoryBlock freeBlock = freeList.getBlock(i);
-			
-			if (freeBlock.length >= length) {
-				// Create allocated block
-				MemoryBlock allocatedBlock = new MemoryBlock(freeBlock.baseAddress, length);
-				allocatedList.addLast(allocatedBlock);
-				
-				// Update free block
-				freeBlock.baseAddress += length;
-				freeBlock.length -= length;
-				
-				if (freeBlock.length == 0) {
-					freeList.remove(i);
-				}
-				
-				return allocatedBlock.baseAddress;
-			}
-		}
-		
 		return -1;
 	}
 	/**
@@ -115,18 +90,20 @@ public class MemorySpace {
 	 */
 	
 	 public void free(int address) {
-		for (int i = 0; i < allocatedList.getSize(); i++) {
-			MemoryBlock block = allocatedList.getBlock(i);
-			
-			if (block.baseAddress == address) {
-				allocatedList.remove(i);
-				freeList.addLast(block);
-				return;
-			}
-		}
-		
-		// If no block found, throw specific exception
+		if (allocatedList.getSize() == 0)
 		throw new IllegalArgumentException("index must be between 0 and size");
+
+		Node current = allocatedList.getFirst();
+		for (int i = 0; i < allocatedList.getSize(); i++) {
+			MemoryBlock allocatedBlock = current.block;
+            if (allocatedBlock.baseAddress == address) {
+                allocatedList.remove(current.block);
+                freeList.addLast(allocatedBlock);
+                return;
+            }
+
+            current = current.next;
+        }
 	}
 	/**
 	 * A textual representation of the free list and the allocated list of this memory space, 
