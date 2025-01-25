@@ -125,6 +125,7 @@ public class MemorySpace {
 			return;
 		}
 		
+		
 		// Sort blocks by base address
 		for (int i = 0; i < freeList.getSize() - 1; i++) {
 			for (int j = 0; j < freeList.getSize() - i - 1; j++) {
