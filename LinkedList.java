@@ -179,21 +179,20 @@ public class LinkedList {
 	 */
 	public void remove(Node node) {
         if (node == null)
-           throw new NullPointerException("node must not be null");
-		   
+            throw new NullPointerException("node must not be null");
         if (size == 0)
             return;
 
         int index = indexOf(node.block);
 
-        if (index == -1)
-            return;
-
-        if (index == 0) {
+		if (index == 0) {
             first = first.next;
             if (size == 1)
                 last = null;
         } 
+ 
+        if (index == -1)
+            return;
 
 		else {
             int counter = 0;
@@ -202,6 +201,7 @@ public class LinkedList {
                 current = current.next;
                 counter++;
             }
+			
             current.next = node.next;
             if (node == last) {
                 last = current;
