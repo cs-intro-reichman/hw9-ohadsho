@@ -170,7 +170,7 @@ public class LinkedList {
 			index++;
 			current = current.next;
 		}
-		
+
 		return -1;
 	}
 	
@@ -181,46 +181,42 @@ public class LinkedList {
 	 * @param node
 	 *        the node that will be removed from this list
 	 */
-	public void remove(Node node) {
-        if (node == null)
-            throw new NullPointerException("node must not be null");
+		public void remove(Node node) {
+		//Edge Cases: List is empty, or node is null
+		if (node == null)
+		throw new NullPointerException("node must not be null");
+		if (size == 0) 
+		return;
 
-        if (size == 0){
-            return;
-		}
+		int index = indexOf(node.block);
+		if (index == -1) //Edge Case: "node" is not present in the list
+		return;
 
-        int index = indexOf(node.block);
-
-        if (index == -1){
-            return;
-		}
-
-        if (index == 0) {
-            first = first.next;
-
-            if (size == 1){
-                last = null;
-			}
+		if (index == 0) { //Edge Case: "node" is the first in the list
+			first = first.next;
 			
-        } 
-		
-		else {
-            int counter = 0;
-          Node current = first;
+			if (size == 1) //Edge Case: "node" was the only node in the list
+			last = null;
+		}
 
-            while (counter < index - 1) {
-                current = current.next;
-                counter++;
+		else {
+			int counter = 0;
+			Node current = first;
+
+			while (counter < index - 1) {
+				current = current.next;
+				counter++;
 			}
-           
+
 			current.next = node.next;
-            if (node == last) {
-                last = current;
-            }
-        }
-		
-        size--;
-    }
+
+			if (node == last) { //Edge Case: Updating "last" if the node removed was the last one.
+				last = current;
+			}
+
+		}
+		size--;
+	}
 
 	/**
 	 * Removes from this list the node which is located at the given index.
@@ -229,12 +225,10 @@ public class LinkedList {
 	 * @throws IllegalArgumentException
 	 *         if index is negative or greater than or equal to size
 	 */
+	public void remove(int index) {
+		if (index < 0 || index >=size)
+		throw new IllegalArgumentException("index must be between 0 and size");
 
-	 public void remove(int index) {
-		if (index < 0 || index >= size) {
-			throw new IllegalArgumentException(
-				"index must be between 0 and size-1");
-		}
 		remove(getNode(index));
 	}
 	/**
