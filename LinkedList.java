@@ -165,7 +165,6 @@ public class LinkedList {
 				return index;
 			}
 			current = current.next;
-			index++;
 		}
 		return -1;
 	}
