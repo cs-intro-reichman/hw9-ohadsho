@@ -158,14 +158,19 @@ public class LinkedList {
 	 * @return the index of the block, or -1 if the block is not in this list
 	 */
 	public int indexOf(MemoryBlock block) {
+		if (size == 0) //Edge Case: List is empty
+		return -1;
+
 		Node current = first;
 		int index = 0;
+
 		while (current != null) {
-			if (current.block == block) {
-				return index;
-			}
+			if (current.block == block)
+			return index;
+			index++;
 			current = current.next;
 		}
+		
 		return -1;
 	}
 	
