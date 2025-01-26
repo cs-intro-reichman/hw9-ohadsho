@@ -178,37 +178,35 @@ public class LinkedList {
 	 *        the node that will be removed from this list
 	 */
 	public void remove(Node node) {
-        if (node == null)
-            throw new NullPointerException("node must not be null");
-        if (size == 0)
-            return;
-
-        int index = indexOf(node.block);
-
-		if (index == 0) {
-            first = first.next;
-            if (size == 1)
-                last = null;
-        } 
- 
-        if (index == -1)
-            return;
-
-		else {
-            int counter = 0;
-            Node current = first;
-            while (counter < index - 1) {
-                current = current.next;
-                counter++;
-            }
-			
-            current.next = node.next;
-            if (node == last) {
-                last = current;
-            }
-        }
-        size--;
-    }
+		if (node == null)
+			throw new NullPointerException("node must not be null");
+		
+		if (node == first) {
+			first = first.next;
+			if (first == null) {
+				last = null;
+			}
+			size--;
+			return;
+		}
+	
+		Node current = first;
+		while (current != null && current.next != node) {
+			current = current.next;
+		}
+	
+		if (current == null) {
+			return;
+		}
+	
+		current.next = node.next;
+		
+		if (node == last) {
+			last = current;
+		}
+		
+		size--;
+	}
 
 	/**
 	 * Removes from this list the node which is located at the given index.
@@ -221,11 +219,32 @@ public class LinkedList {
 	 public void remove(int index) {
 		if (index < 0 || index >= size) {
 			throw new IllegalArgumentException(
-					"index must be between 0 and size");
+				"index must be between 0 and size-1");
 		}
-		remove(getNode(index));
+		
+		if (index == 0) {
+			first = first.next;
+			if (first == null) {
+				last = null;
+			}
+			size--;
+			return;
+		}
+	
+		Node current = first;
+		for (int i = 0; i < index - 1; i++) {
+			current = current.next;
+		}
+	
+		Node nodeToRemove = current.next;
+		current.next = nodeToRemove.next;
+		
+		if (nodeToRemove == last) {
+			last = current;
+		}
+		
+		size--;
 	}
-
 	/**
 	 * Removes from this list the node pointing to the given memory block.
 	 * 
@@ -234,12 +253,37 @@ public class LinkedList {
 	 *         if the given memory block is not in this list
 	 */
 	public void remove(MemoryBlock block) {
-		int index = indexOf(block);
-		if (index == -1) {
-			throw new IllegalArgumentException("Block not found in list");
+		if (block == null) {
+			throw new NullPointerException("block must not be null");
 		}
-		remove(index);
-	}		
+	
+		if (first != null && first.block == block) {
+			first = first.next;
+			if (first == null) {
+				last = null;
+			}
+			size--;
+			return;
+		}
+	
+		Node current = first;
+		while (current != null && current.next != null) {
+			if (current.next.block == block) {
+				Node nodeToRemove = current.next;
+				current.next = nodeToRemove.next;
+				
+				if (nodeToRemove == last) {
+					last = current;
+				}
+				
+				size--;
+				return;
+			}
+			current = current.next;
+		}
+	
+		throw new IllegalArgumentException("Block not found in list");
+	}	
 
 	/**
 	 * Returns an iterator over this list, starting with the first element.
