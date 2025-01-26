@@ -178,35 +178,45 @@ public class LinkedList {
 	 *        the node that will be removed from this list
 	 */
 	public void remove(Node node) {
-		if (node == null)
-			throw new NullPointerException("node must not be null");
-		
-		if (node == first) {
-			first = first.next;
-			if (first == null) {
-				last = null;
+        if (node == null)
+            throw new NullPointerException("node must not be null");
+
+        if (size == 0){
+            return;
+		}
+
+        int index = indexOf(node.block);
+
+        if (index == -1){
+            return;
+		}
+
+        if (index == 0) {
+            first = first.next;
+
+            if (size == 1){
+                last = null;
 			}
-			size--;
-			return;
-		}
-	
-		Node current = first;
-		while (current != null && current.next != node) {
-			current = current.next;
-		}
-	
-		if (current == null) {
-			return;
-		}
-	
-		current.next = node.next;
+			
+        } 
 		
-		if (node == last) {
-			last = current;
-		}
+		else {
+            int counter = 0;
+          Node current = first;
+
+            while (counter < index - 1) {
+                current = current.next;
+                counter++;
+			}
+           
+			current.next = node.next;
+            if (node == last) {
+                last = current;
+            }
+        }
 		
-		size--;
-	}
+        size--;
+    }
 
 	/**
 	 * Removes from this list the node which is located at the given index.
@@ -221,29 +231,7 @@ public class LinkedList {
 			throw new IllegalArgumentException(
 				"index must be between 0 and size-1");
 		}
-		
-		if (index == 0) {
-			first = first.next;
-			if (first == null) {
-				last = null;
-			}
-			size--;
-			return;
-		}
-	
-		Node current = first;
-		for (int i = 0; i < index - 1; i++) {
-			current = current.next;
-		}
-	
-		Node nodeToRemove = current.next;
-		current.next = nodeToRemove.next;
-		
-		if (nodeToRemove == last) {
-			last = current;
-		}
-		
-		size--;
+		remove(getNode(index));
 	}
 	/**
 	 * Removes from this list the node pointing to the given memory block.
