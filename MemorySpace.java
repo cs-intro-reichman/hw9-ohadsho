@@ -90,7 +90,7 @@ public class MemorySpace {
 	
 	 public void free(int address) {
 		if (allocatedList.getSize() == 0) {
-			throw new IllegalArgumentException("No blocks allocated");
+			throw new IllegalArgumentException("index must be between 0 and size");
 		}
 	
 		Node current = allocatedList.getFirst();
@@ -99,12 +99,11 @@ public class MemorySpace {
 				MemoryBlock blockToFree = current.block;
 				allocatedList.remove(current);
 				freeList.addLast(blockToFree);
-				defrag();
 				return;
 			}
 			current = current.next;
 		}
-		throw new IllegalArgumentException("Address not found in allocated blocks");
+		return; 
 	}
 	/**
 	 * A textual representation of the free list and the allocated list of this memory space, 
