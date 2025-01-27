@@ -120,25 +120,8 @@ public class MemorySpace {
 	 */
 
 	 public void defrag() {
-		for (int i = 0; i < freeList.getSize(); i++) {
-
-			MemoryBlock currentBlock = freeList.getBlock(i);
-
-			int endAddress = currentBlock.baseAddress + currentBlock.length;
-			Node currentN = freeList.getFirst();  
-
-			while(currentN != null) {
-			
-				MemoryBlock nextBlock = currentN.block;
-				if (nextBlock.baseAddress == endAddress) {
-				currentBlock.length = currentBlock.length + nextBlock.length;
-				freeList.remove(currentN); 
-				defrag();
-				break;
-				}
-				currentN = currentN.next; 
-			}
-		}
-	}
+		
+		
+	 }
 }
 
