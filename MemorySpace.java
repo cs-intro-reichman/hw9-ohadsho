@@ -96,12 +96,12 @@ public class MemorySpace {
 		while (currentN != null) {
 			MemoryBlock allocatedBlock = currentN.block;
             if (allocatedBlock.baseAddress == address) {
+
                 allocatedList.remove(currentN.block);
                 freeList.addLast(allocatedBlock);
 
                 return;
             }
-
             currentN = currentN.next;
         }
 	}
