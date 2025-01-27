@@ -65,11 +65,13 @@ public class MemorySpace {
 				MemoryBlock allocatedBlock = new MemoryBlock(freeBlock.baseAddress, length);
 				allocatedList.addLast(allocatedBlock);
 				
-				freeBlock.baseAddress += length;
-				freeBlock.length -= length;
-				
-				if (freeBlock.length == 0) {
+				if (freeBlock.length == length) {
 					freeList.remove(i);
+				}
+				
+				else{
+					freeBlock.baseAddress += length;
+					freeBlock.length -= length;
 				}
 				
 				return allocatedBlock.baseAddress;
