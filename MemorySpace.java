@@ -57,31 +57,11 @@ public class MemorySpace {
 	 *        the length (in words) of the memory block that has to be allocated
 	 * @return the base address of the allocated block, or -1 if unable to allocate
 	 */
-	public int malloc(int length) {
-		Node currentN = freeList.getFirst();
-
-		while (currentN != null) {
-			MemoryBlock freeBlock = currentN.block;
-			
-			if (freeBlock.length >= length) {
-				MemoryBlock allocatedBlock = new MemoryBlock(freeBlock.baseAddress, length);
-				allocatedList.addLast(allocatedBlock);
-				
-				if (freeBlock.length == length) {
-					freeList.remove(currentN.block);
-				}
-
-				else{
-					freeBlock.baseAddress += length;
-					freeBlock.length -= length;
-				}
-				
-				return allocatedBlock.baseAddress;
-			}
-			currentN = currentN.next;
-		}
+	public int malloc(int length) {		
+		//// Replace the following statement with your code
 		return -1;
 	}
+
 	/**
 	 * Frees the memory block whose base address equals the given address.
 	 * This implementation deletes the block whose base address equals the given 
@@ -90,23 +70,10 @@ public class MemorySpace {
 	 * @param baseAddress
 	 *            the starting address of the block to freeList
 	 */
-	
-	 public void free(int address) {
-		if (allocatedList.getSize() == 0)
-		throw new IllegalArgumentException("index must be between 0 and size");
-
-		Node currentN = allocatedList.getFirst();
-		while (currentN != null) {
-			MemoryBlock allocatedBlock = currentN.block;
-            if (allocatedBlock.baseAddress == address) {
-                allocatedList.remove(currentN.block);
-                freeList.addLast(allocatedBlock);
-                return;
-            }
-
-            currentN = currentN.next;
-        }
+	public void free(int address) {
+		//// Write your code here
 	}
+	
 	/**
 	 * A textual representation of the free list and the allocated list of this memory space, 
 	 * for debugging purposes.
@@ -120,45 +87,7 @@ public class MemorySpace {
 	 * Normally, called by malloc, when it fails to find a memory block of the requested size.
 	 * In this implementation Malloc does not call defrag.
 	 */
-
-	 public void defrag() {
-		freeList = sortFreeListByBaseAddress();
-	
-		Node current = freeList.getFirst();
-
-		while (current != null && current.next != null) {
-			MemoryBlock currentBlock = current.block;
-			MemoryBlock nextBlock = current.next.block;
-	
-			if (currentBlock.baseAddress + currentBlock.length == nextBlock.baseAddress) {
-				currentBlock.length += nextBlock.length;
-				freeList.remove(nextBlock);
-			}
-
-			 else {
-				current = current.next;
-			}
-		}
+	public void defrag() {
+		//// Write your code here
 	}
-	
-	private LinkedList sortFreeListByBaseAddress() {
-		LinkedList sortedFreeList = new LinkedList();
-		while (freeList.getSize() > 0) {
-			Node minNode = freeList.getFirst();
-			Node current = freeList.getFirst();
-
-			while (current != null) {
-				if (current.block.baseAddress < minNode.block.baseAddress) {
-					minNode = current;
-				}
-				current = current.next;
-			}
-
-			freeList.remove(minNode.block);
-			sortedFreeList.addLast(minNode.block);
-		}
-		return sortedFreeList;
-	}
-	
-	
 }
