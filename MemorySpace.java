@@ -122,41 +122,43 @@ public class MemorySpace {
 	 */
 
 	 public void defrag() {
-		if (freeList.getSize() <= 1) {
-			return;
-		}
-		
-				for (int i = 0; i < freeList.getSize() - 1; i++) {
-			for (int j = 0; j < freeList.getSize() - i - 1; j++) {
-				MemoryBlock current = freeList.getBlock(j);
-				MemoryBlock next = freeList.getBlock(j + 1);
-				if (current.baseAddress > next.baseAddress) {
-					// Swap blocks
-					int tempBase = current.baseAddress;
-					int tempLength = current.length;
-					
-					current.baseAddress = next.baseAddress;
-					current.length = next.length;
-					
-					
-					next.baseAddress = tempBase;
-					next.length = tempLength;
-				}
+		freeList = sortFreeListByBaseAddress();
+	
+		Node current = freeList.getFirst();
+
+		while (current != null && current.next != null) {
+			MemoryBlock currentBlock = current.block;
+			MemoryBlock nextBlock = current.next.block;
+	
+			if (currentBlock.baseAddress + currentBlock.length == nextBlock.baseAddress) {
+				currentBlock.length += nextBlock.length;
+				freeList.remove(nextBlock);
 			}
-		}
-		
-		for (int i = 0; i < freeList.getSize() - 1; ) {
-			MemoryBlock current = freeList.getBlock(i);
-			MemoryBlock next = freeList.getBlock(i + 1);
-			
-			if (current.baseAddress + current.length == next.baseAddress) {
-				current.length += next.length;
-				freeList.remove(i + 1);
-			} else {
-				i++;
+
+			 else {
+				current = current.next;
 			}
 		}
 	}
+	
+	private LinkedList sortFreeListByBaseAddress() {
+		LinkedList sortedFreeList = new LinkedList();
+		while (freeList.getSize() > 0) {
+			Node minNode = freeList.getFirst();
+			Node current = freeList.getFirst();
 
+			while (current != null) {
+				if (current.block.baseAddress < minNode.block.baseAddress) {
+					minNode = current;
+				}
+				current = current.next;
+			}
+
+			freeList.remove(minNode.block);
+			sortedFreeList.addLast(minNode.block);
+		}
+		return sortedFreeList;
+	}
+	
 	
 }
