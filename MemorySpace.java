@@ -59,24 +59,24 @@ public class MemorySpace {
 	 */
 	public int malloc(int length) {
 		Node currentN = freeList.getFirst();
-
+		
 		while (currentN != null) {
 			MemoryBlock freeBlock = currentN.block;
-
-			MemoryBlock allocatedBlock = new MemoryBlock(freeBlock.baseAddress, length);
-				allocatedList.addLast(allocatedBlock);
 			
-			if (freeBlock.length >= length && freeBlock.length == length) 
-					freeList.remove(currentN.block);
-
-			else{
+			if (freeBlock.length >= length) {
+				MemoryBlock allocatedBlock = new MemoryBlock(freeBlock.baseAddress, length);
+				allocatedList.addLast(allocatedBlock);
+				
+				if (freeBlock.length == length) {
+					freeList.remove(currentN);
+				} else {
 					freeBlock.baseAddress += length;
 					freeBlock.length -= length;
 				}
-				
 				return allocatedBlock.baseAddress;
-					}
-
+			}
+			currentN = currentN.next;
+		}
 		return -1;
 	}
 	/**
@@ -89,21 +89,22 @@ public class MemorySpace {
 	 */
 	
 	 public void free(int address) {
-		if (allocatedList.getSize() == 0)
-		throw new IllegalArgumentException("index must be between 0 and size");
-
-		Node currentN = allocatedList.getFirst();
-		while (currentN != null) {
-			MemoryBlock allocatedBlock = currentN.block;
-            if (allocatedBlock.baseAddress == address) {
-
-                allocatedList.remove(currentN.block);
-                freeList.addLast(allocatedBlock);
-
-                return;
-            }
-            currentN = currentN.next;
-        }
+		if (allocatedList.getSize() == 0) {
+			throw new IllegalArgumentException("No blocks allocated");
+		}
+	
+		Node current = allocatedList.getFirst();
+		while (current != null) {
+			if (current.block.baseAddress == address) {
+				MemoryBlock blockToFree = current.block;
+				allocatedList.remove(current);
+				freeList.addLast(blockToFree);
+				defrag();
+				return;
+			}
+			current = current.next;
+		}
+		throw new IllegalArgumentException("Address not found in allocated blocks");
 	}
 	/**
 	 * A textual representation of the free list and the allocated list of this memory space, 
