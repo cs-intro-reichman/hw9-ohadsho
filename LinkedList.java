@@ -259,16 +259,12 @@ public class LinkedList {
 	 * A textual representation of this list, for debugging.
 	 */
 	public String toString() {
-		String result = "[";
+		String s = "";
 		Node current = first;
 		while (current != null) {
-			result += current;
-			if (current.next != null) {
-				result += ", ";
-			}
-			current = current.next;
+		s = s + current.block + " ";
+		current = current.next;
 		}
-		result += "]";
-		return result;
-	}
+		return s;
+		}
 }
