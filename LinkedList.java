@@ -187,7 +187,10 @@ public class LinkedList {
 
         int index = indexOf(node.block);
 
-    
+        if (index == -1){
+            return;
+		}
+
         if (index == 0) {
             first = first.next;
 
@@ -196,11 +199,6 @@ public class LinkedList {
 			}
 			
         } 
-
-
-		if (index == -1){
-            return;
-		}
 		
 		else {
             int counter = 0;
