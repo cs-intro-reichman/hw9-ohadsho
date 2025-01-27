@@ -112,16 +112,43 @@ public class MemorySpace {
 	public String toString() {
 		return freeList.toString() + "\n" + allocatedList.toString();		
 	}
-	
-	/**
-	 * Performs defragmantation of this memory space.
-	 * Normally, called by malloc, when it fails to find a memory block of the requested size.
-	 * In this implementation Malloc does not call defrag.
-	 */
 
 	 public void defrag() {
+		if (freeList.getSize() <= 1) {
+			return;
+		}
 		
+				for (int i = 0; i < freeList.getSize() - 1; i++) {
+			for (int j = 0; j < freeList.getSize() - i - 1; j++) {
+				MemoryBlock current = freeList.getBlock(j);
+				MemoryBlock next = freeList.getBlock(j + 1);
+				if (current.baseAddress > next.baseAddress) {
+					// Swap blocks
+					int tempBase = current.baseAddress;
+					int tempLength = current.length;
+					
+					current.baseAddress = next.baseAddress;
+					current.length = next.length;
+					
+					
+					next.baseAddress = tempBase;
+					next.length = tempLength;
+				}
+			}
+		}
 		
-	 }
-}
+		for (int i = 0; i < freeList.getSize() - 1; ) {
+			MemoryBlock current = freeList.getBlock(i);
+			MemoryBlock next = freeList.getBlock(i + 1);
+			
+			if (current.baseAddress + current.length == next.baseAddress) {
+				current.length += next.length;
+				freeList.remove(i + 1);
+			} else {
+				i++;
+			}
+		}
+	}
 
+	
+}
